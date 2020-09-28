@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+service ShopService{
+    rpc GetStoreById(GetStoreByIdReq) returns (StoreDto) {}
+}
+
+
+message GetStoreByIdReq{
+    int32 id = 1;
+    bool isCache = 2;
+}
+
+message StoreDto{
+    int32     id = 1;                  
+    string    name = 2;
+    string    phone = 3;
+    string    code = 4;
+    int32     shop_status = 5;
+    int32     shop_type = 6;
+  }
+  
