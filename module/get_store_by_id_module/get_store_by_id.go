@@ -1,11 +1,12 @@
 package get_store_by_id_module
 
 import (
-    "github.com/pkg/errors"
+    "context"
     "github.com/sirupsen/logrus"
-	"context"
-	"github/ptncafe/PtnCafe.Golang.Gin.Grpc.Test/model/entity"
+    "github/ptncafe/PtnCafe.Golang.Gin.Grpc.Test/model/app_error"
+    "github/ptncafe/PtnCafe.Golang.Gin.Grpc.Test/model/entity"
     store "github/ptncafe/PtnCafe.Golang.Gin.Grpc.Test/proto"
+    "github/ptncafe/PtnCafe.Golang.Gin.Grpc.Test/provider"
 )
 type module struct{
     log *logrus.Logger
@@ -21,14 +22,16 @@ func NewGetStoreByIdMudule(
         shopServiceClient: shopServiceClient,
     }
 }
-func (m *module) GetStoreById(ctx context.Context, id int32) (*entity.Store, error){
+
+
+func (m *module) GetStoreById(ctx context.Context, id int32) (*entity.Store, *app_error.AppError){
     data, err := m.shopServiceClient.GetStoreById(ctx, &store.GetStoreByIdReq{
         Id: id,
         IsCache: true,
     })
+
     if err != nil {
-        m.log.Errorf("GetStoreById %d %+v", id, errors.Wrap(err, "m.shopServiceClient.GetStoreById"))
-        return nil, err
+        return nil, provider.GrpcErrorToAppError(err, m.log)
     }
     return &entity.Store{
        Id : id,

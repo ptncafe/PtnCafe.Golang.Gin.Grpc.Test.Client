@@ -21,6 +21,9 @@ func NewAppErrorNil(err error,typeError  ErrorType) *AppError{
 	return &AppError{DetailError: err, TypeError: typeError}
 }
 func(appError *AppError) Error() string  {
+	if appError == nil {
+		return ""
+	}
 	if appError.DetailError != nil {
 		return  appError.DetailError.Error()
 	}
@@ -30,7 +33,10 @@ func(appError *AppError) Error() string  {
 func NewInvalidError(message string) AppError{
 	return NewAppErrorMessage(message, BadRequestError)
 }
-
+func NewInvalidErrorNil(message string) *AppError{
+	err := NewInvalidError(message)
+	return &err
+}
 //func NewInvalidFieldError(message string,field string) AppError{
 //	return NewAppErrorFieldMessage(message, BadRequestError, field)
 //}
